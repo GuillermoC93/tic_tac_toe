@@ -9,15 +9,16 @@ end
 
 class Board
   attr_reader :board
-
-  @@moves = []
+  attr_writer :moves
 
   def initialize
-    @board =  [
+    @board = [
                   ['--1--', '--2--', '--3--'],
                   ['--4--', '--5--', '--6--'],
                   ['--7--', '--8--', '--9--']
               ]
+
+    @moves = []
   end
 
   def draw_board
@@ -35,22 +36,83 @@ class Board
       puts 'Please input a valid move: '
       move = gets.chomp.to_i until move >= 1 && move < 10
     end
-    if @@moves.include?(move)
+    if @moves.include?(move)
       puts 'Error! Not a valid move'
       puts 'Please input a valid move: '
-      move = gets.chomp.to_i until @@moves.include?(move) == false
+      move = gets.chomp.to_i until @moves.include?(move) == false
     end
+  
     if (1..3).include?(move)
-      @@moves << move
+      @moves << move
       @board[0][move-1][2] = "#{player.symbl}" 
     elsif (4..6).include?(move)
-      @@moves << move
+      @moves << move
       @board[1][move-4][2] = "#{player.symbl}"
     else
-      @@moves << move
+      @moves << move
       @board[2][move-7][2] = "#{player.symbl}"
     end
     draw_board
+  end
+
+  def horizontal_win
+    if @board[0][0][2] == 'X' && @board[0][1][2] == 'X' && @board[0][2][2] == 'X'
+      puts "#{@player_one.name} has won the game!"
+      new_game?
+    elsif @board[1][0][2] == 'X' && @board[1][1][2] == 'X' && @board[1][2][2] == 'X'
+      puts "#{@player_one.name} has won the game!"
+      new_game?
+    elsif @board[2][0][2] == 'X' && @board[2][1][2] == 'X' && @board[2][2][2] == 'X'
+      puts "#{@player_one.name} has won the game!"
+      new_game?
+    elsif @board[0][0][2] == 'O' && @board[0][1][2] == 'O' && @board[0][2][2] == 'O'
+      puts "#{@player_two.name} has won the game!"
+      new_game?
+    elsif @board[1][0][2] == 'O' && @board[1][1][2] == 'O' && @board[1][2][2] == 'O'
+      puts "#{@player_two.name} has won the game!"
+      new_game?
+    elsif @board[2][0][2] == 'O' && @board[2][1][2] == 'O' && @board[2][2][2] == 'O'
+      puts "#{@player_two.name} has won the game!"
+      new_game?
+    end
+  end
+
+  def vertical_win
+    if @board[0][0][2] == 'X' && @board[1][0][2] == 'X' && @board[2][0][2] == 'X'
+      puts "#{@player_one.name} has won the game!"
+      new_game?
+    elsif @board[0][1][2] == 'X' && @board[1][1][2] == 'X' && @board[2][1][2] == 'X'
+      puts "#{@player_one.name} has won the game!"
+      new_game?
+    elsif @board[0][2][2] == 'X' && @board[1][2][2] == 'X' && @board[2][2][2] == 'X'
+      puts "#{@player_one.name} has won the game!"
+      new_game?
+    elsif @board[0][0][2] == 'O' && @board[1][0][2] == 'O' && @board[2][0][2] == 'O'
+      puts "#{@player_two.name} has won the game!"
+      new_game?
+    elsif @board[0][1][2] == 'O' && @board[1][1][2] == 'O' && @board[2][1][2] == 'O'
+      puts "#{@player_two.name} has won the game!"
+      new_game?
+    elsif @board[0][2][2] == 'O' && @board[1][2][2] == 'O' && @board[2][2][2] == 'O'
+      puts "#{@player_two.name} has won the game!"
+      new_game?
+    end
+  end
+
+  def diagonal_win
+    if @board[0][0][2] == 'X' && @board[1][1][2] == 'X' && @board[2][2][2] == 'X'
+      puts "#{@player_one.name} has won the game!"
+      new_game?
+    elsif @board[2][0][2] == 'X' && @board[1][1][2] == 'X' && @board[0][2][2] == 'X'
+      puts "#{@player_one.name} has won the game!"
+      new_game?
+    elsif @board[0][0][2] == 'O' && @board[1][1][2] == 'O' && @board[2][2][2] == 'O'
+      puts "#{@player_two.name} has won the game!"
+      new_game?
+    elsif @board[2][0][2] == 'O' && @board[1][1][2] == 'O' && @board[0][2][2] == 'O'
+      puts "#{@player_two.name} has won the game!"
+      new_game?
+    end
   end
 end
 
@@ -59,8 +121,14 @@ class Game < Board
 
   def initialize
     super
-    @@moves.clear
+    start_game
     game_loop
+  end
+
+  def start_game
+    player_one_name
+    player_two_name
+    draw_board
   end
 
   def player_one_name
@@ -92,76 +160,33 @@ class Game < Board
   end
 
   def player_one_win?
-    # horizontal wins
-    if @board[0][0][2] == 'X' && @board[0][1][2] == 'X' && @board[0][2][2] == 'X'
-      puts "#{@player_one.name} has won the game!"
-      true
-    elsif @board[1][0][2] == 'X' && @board[1][1][2] == 'X' && @board[1][2][2] == 'X'
-      puts "#{@player_one.name} has won the game!"
-      true
-    elsif @board[2][0][2] == 'X' && @board[2][1][2] == 'X' && @board[2][2][2] == 'X'
-      puts "#{@player_one.name} has won the game!"
-      true
-    # vertical wins
-    elsif @board[0][0][2] == 'X' && @board[1][0][2] == 'X' && @board[2][0][2] == 'X'
-      puts "#{@player_one.name} has won the game!"
-      true
-    elsif @board[0][1][2] == 'X' && @board[1][1][2] == 'X' && @board[2][1][2] == 'X'
-      puts "#{@player_one.name} has won the game!"
-      true
-    elsif @board[0][2][2] == 'X' && @board[1][2][2] == 'X' && @board[2][2][2] == 'X'
-      puts "#{@player_one.name} has won the game!"
-      true
-    # diagonal wins
-    elsif @board[0][0][2] == 'X' && @board[1][1][2] == 'X' && @board[2][2][2] == 'X'
-      puts "#{@player_one.name} has won the game!"
-      true
-    elsif @board[2][0][2] == 'X' && @board[1][1][2] == 'X' && @board[0][2][2] == 'X'
-      puts "#{@player_one.name} has won the game!"
-      true
-    end
+    horizontal_win
+    vertical_win
+    diagonal_win
   end
 
   def player_two_win?
-    # horizontal wins
-    if @board[0][0][2] == 'O' && @board[0][1][2] == 'O' && @board[0][2][2] == 'O'
-      puts "#{@player_two.name} has won the game!"
-      true
-    elsif @board[1][0][2] == 'O' && @board[1][1][2] == 'O' && @board[1][2][2] == 'O'
-      puts "#{@player_two.name} has won the game!"
-      true
-    elsif @board[2][0][2] == 'O' && @board[2][1][2] == 'O' && @board[2][2][2] == 'O'
-      puts "#{@player_two.name} has won the game!"
-      true
-    # vertical wins
-    elsif @board[0][0][2] == 'O' && @board[1][0][2] == 'O' && @board[2][0][2] == 'O'
-      puts "#{@player_two.name} has won the game!"
-      true
-    elsif @board[0][1][2] == 'O' && @board[1][1][2] == 'O' && @board[2][1][2] == 'O'
-      puts "#{@player_two.name} has won the game!"
-      true
-    elsif @board[0][2][2] == 'O' && @board[1][2][2] == 'O' && @board[2][2][2] == 'O'
-      puts "#{@player_two.name} has won the game!"
-      true
-    # diagonal wins
-    elsif @board[0][0][2] == 'O' && @board[1][1][2] == 'O' && @board[2][2][2] == 'O'
-      puts "#{@player_two.name} has won the game!"
-      true
-    elsif @board[2][0][2] == 'O' && @board[1][1][2] == 'O' && @board[0][2][2] == 'O'
-      puts "#{@player_two.name} has won the game!"
-      true
-    end
+    horizontal_win
+    vertical_win
+    diagonal_win
   end
 
   def tie_game
     puts "It's a tie!"
   end
 
+  def new_game?
+    puts "New game? [y/n]"
+    answer = gets.chomp
+    if answer == "y"
+      true
+    else
+      false
+    end
+  end
+
   def game_loop
     loop do
-      player_one_name
-      player_two_name
-      draw_board
       player_one_move
       update_board(@player_one, @player_one_move)
       player_two_move
@@ -172,19 +197,19 @@ class Game < Board
       update_board(@player_two, @player_two_move)
       player_one_move
       update_board(@player_one, @player_one_move)
-      player_one_win? ? break :
+      player_one_win?
       player_two_move
       update_board(@player_two, @player_two_move)
-      player_two_win? ? break :
+      player_two_win?
       player_one_move
       update_board(@player_one, @player_one_move)
-      player_one_win? ? break :
+      player_one_win?
       player_two_move
       update_board(@player_two, @player_two_move)
-      player_two_win? ? break :
+      player_two_win?
       player_one_move
       update_board(@player_one, @player_one_move)
-      player_one_win? ? break :
+      player_one_win?
       tie_game
       break
     end
