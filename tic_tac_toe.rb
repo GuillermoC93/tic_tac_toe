@@ -58,60 +58,63 @@ class Board
   def horizontal_win
     if @board[0][0][2] == 'X' && @board[0][1][2] == 'X' && @board[0][2][2] == 'X'
       puts "#{@player_one.name} has won the game!"
-      new_game?
+      true
     elsif @board[1][0][2] == 'X' && @board[1][1][2] == 'X' && @board[1][2][2] == 'X'
       puts "#{@player_one.name} has won the game!"
-      new_game?
+      true
     elsif @board[2][0][2] == 'X' && @board[2][1][2] == 'X' && @board[2][2][2] == 'X'
       puts "#{@player_one.name} has won the game!"
-      new_game?
+      true
     elsif @board[0][0][2] == 'O' && @board[0][1][2] == 'O' && @board[0][2][2] == 'O'
       puts "#{@player_two.name} has won the game!"
-      new_game?
+      true
     elsif @board[1][0][2] == 'O' && @board[1][1][2] == 'O' && @board[1][2][2] == 'O'
       puts "#{@player_two.name} has won the game!"
-      new_game?
+      true
     elsif @board[2][0][2] == 'O' && @board[2][1][2] == 'O' && @board[2][2][2] == 'O'
       puts "#{@player_two.name} has won the game!"
-      new_game?
+      true
+    else false
     end
   end
 
   def vertical_win
     if @board[0][0][2] == 'X' && @board[1][0][2] == 'X' && @board[2][0][2] == 'X'
       puts "#{@player_one.name} has won the game!"
-      new_game?
+      true
     elsif @board[0][1][2] == 'X' && @board[1][1][2] == 'X' && @board[2][1][2] == 'X'
       puts "#{@player_one.name} has won the game!"
-      new_game?
+      true
     elsif @board[0][2][2] == 'X' && @board[1][2][2] == 'X' && @board[2][2][2] == 'X'
       puts "#{@player_one.name} has won the game!"
-      new_game?
+      true
     elsif @board[0][0][2] == 'O' && @board[1][0][2] == 'O' && @board[2][0][2] == 'O'
       puts "#{@player_two.name} has won the game!"
-      new_game?
+      true
     elsif @board[0][1][2] == 'O' && @board[1][1][2] == 'O' && @board[2][1][2] == 'O'
       puts "#{@player_two.name} has won the game!"
-      new_game?
+      true
     elsif @board[0][2][2] == 'O' && @board[1][2][2] == 'O' && @board[2][2][2] == 'O'
       puts "#{@player_two.name} has won the game!"
-      new_game?
+      true
+    else false
     end
   end
 
   def diagonal_win
     if @board[0][0][2] == 'X' && @board[1][1][2] == 'X' && @board[2][2][2] == 'X'
       puts "#{@player_one.name} has won the game!"
-      new_game?
+      true
     elsif @board[2][0][2] == 'X' && @board[1][1][2] == 'X' && @board[0][2][2] == 'X'
       puts "#{@player_one.name} has won the game!"
-      new_game?
+      true
     elsif @board[0][0][2] == 'O' && @board[1][1][2] == 'O' && @board[2][2][2] == 'O'
       puts "#{@player_two.name} has won the game!"
-      new_game?
+      true
     elsif @board[2][0][2] == 'O' && @board[1][1][2] == 'O' && @board[0][2][2] == 'O'
       puts "#{@player_two.name} has won the game!"
-      new_game?
+      true
+    else false
     end
   end
 end
@@ -159,16 +162,28 @@ class Game < Board
     print "\n\n"
   end
 
-  def player_one_win?
-    horizontal_win
-    vertical_win
-    diagonal_win
+  def player_one_win
+    if horizontal_win == true
+      true
+    elsif vertical_win == true
+      true
+    elsif diagonal_win == true
+      true
+    else
+      false
+    end
   end
 
-  def player_two_win?
-    horizontal_win
-    vertical_win
-    diagonal_win
+  def player_two_win
+    if horizontal_win == true
+      true
+    elsif vertical_win == true
+      true
+    elsif diagonal_win == true
+      true
+    else
+      false
+    end
   end
 
   def tie_game
@@ -176,13 +191,9 @@ class Game < Board
   end
 
   def new_game?
-    puts "New game? [y/n]"
+    puts 'New game? [y/n]'
     answer = gets.chomp
-    if answer == "y"
-      true
-    else
-      false
-    end
+    answer == 'y'
   end
 
   def game_loop
@@ -197,20 +208,31 @@ class Game < Board
       update_board(@player_two, @player_two_move)
       player_one_move
       update_board(@player_one, @player_one_move)
-      player_one_win?
+      if player_one_win
+        new_game? ? Game.new : break
+      end
       player_two_move
       update_board(@player_two, @player_two_move)
-      player_two_win?
+      if player_two_win
+        new_game? ? Game.new : break
+      end
       player_one_move
       update_board(@player_one, @player_one_move)
-      player_one_win?
+      if player_one_win
+        new_game? ? Game.new : break
+      end
       player_two_move
       update_board(@player_two, @player_two_move)
-      player_two_win?
+      if player_two_win
+        new_game? ? Game.new : break
+      end
       player_one_move
       update_board(@player_one, @player_one_move)
-      player_one_win?
+      if player_one_win
+        new_game? ? Game.new : break
+      end
       tie_game
+      new_game? ? Game.new : break
       break
     end
   end
